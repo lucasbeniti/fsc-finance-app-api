@@ -1,6 +1,6 @@
 import { PostgresHelper } from '../../db/postgres/helper.js';
 
-export class PostgresUpdateUser {
+export class PostgresUpdateUserRepository {
   async execute(userId, updateUserParams) {
     const updateFields = [];
     const updateValues = [];
@@ -13,7 +13,8 @@ export class PostgresUpdateUser {
     updateValues.push(userId);
 
     const updateQuery = `
-      UPDATE users SET ${updateFields.join(', ')}
+      UPDATE users 
+      SET ${updateFields.join(', ')}
       WHERE id = $${updateValues.length}
       RETURNING *
     `;
