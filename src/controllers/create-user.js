@@ -5,8 +5,10 @@ import {
   invalidPasswordResponse,
   validateEmail,
   validatePassword,
-} from './helpers/user.js';
-import { badRequest, created, serverError } from './helpers/http.js';
+  badRequest,
+  created,
+  serverError,
+} from './helpers/index.js';
 
 export class CreateUserController {
   async execute(httpRequest) {
@@ -20,12 +22,12 @@ export class CreateUserController {
         }
       }
 
-      const passwordIsValid = validatePassword();
+      const passwordIsValid = validatePassword(params.password);
       if (!passwordIsValid) {
         return invalidPasswordResponse();
       }
 
-      const emailIsValid = validateEmail();
+      const emailIsValid = validateEmail(params.email);
       if (!emailIsValid) {
         return invalidEmailResponse();
       }

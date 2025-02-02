@@ -7,8 +7,10 @@ import {
   validateEmail,
   validateId,
   validatePassword,
-} from './helpers/user.js';
-import { badRequest, ok, serverError } from './helpers/http.js';
+  badRequest,
+  ok,
+  serverError,
+} from './helpers/index.js';
 
 export class UpdateUserController {
   async execute(httpRequest) {
@@ -16,7 +18,7 @@ export class UpdateUserController {
       const params = httpRequest.body;
 
       const userId = httpRequest.params.userId;
-      const isIdValid = validateId();
+      const isIdValid = validateId(userId);
       if (!isIdValid) {
         return invalidIdResponse();
       }
@@ -32,14 +34,14 @@ export class UpdateUserController {
       }
 
       if (params.password) {
-        const passwordIsValid = validatePassword();
+        const passwordIsValid = validatePassword(params.password);
         if (!passwordIsValid) {
           return invalidPasswordResponse();
         }
       }
 
       if (params.email) {
-        const emailIsValid = validateEmail();
+        const emailIsValid = validateEmail(params.email);
         if (!emailIsValid) {
           return invalidEmailResponse;
         }
