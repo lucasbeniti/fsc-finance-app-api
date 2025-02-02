@@ -1,23 +1,28 @@
-import { badRequest, ok, serverError } from './helpers.js';
 import validator from 'validator';
 import { UpdateUserUseCase } from '../use-cases/update-user.js';
 import { EmailAlreadyInUseError } from '../errors/user.js';
+import {
+  invalidEmailResponse,
+  invalidIdResponse,
+  invalidPasswordResponse,
+  validateEmail,
+  validatePassword,
+} from './helpers/user.js';
+import { badRequest, ok, serverError } from './helpers/http.js';
 
 export class UpdateUserController {
   async execute(httpRequest) {
     try {
-      const updateUserParams = httpRequest.body;
+      const params = httpRequest.body;
 
       const userId = httpRequest.params.userId;
       const isIdValid = validator.isUUID(userId);
       if (!isIdValid) {
-        return badRequest({
-          message: 'The provided is not valid.',
-        });
+        return invalidIdResponse();
       }
 
       const allowedFields = ['first_name', 'last_name', 'email', 'password'];
-      const someFieldIsNotAllowed = Object.keys(updateUserParams).some(
+      const someFieldIsNotAllowed = Object.keys(params).some(
         (field) => !allowedFields.includes(field)
       );
       if (someFieldIsNotAllowed) {
@@ -26,29 +31,22 @@ export class UpdateUserController {
         });
       }
 
-      if (updateUserParams.password) {
-        const passwordIsValid = updateUserParams.password.length > 6;
+      if (params.password) {
+        const passwordIsValid = validatePassword();
         if (!passwordIsValid) {
-          return badRequest({
-            message: 'Password must be at least 6 characters.',
-          });
+          return invalidPasswordResponse();
         }
       }
 
-      if (updateUserParams.email) {
-        const emailIsValid = validator.isEmail(updateUserParams.email);
+      if (params.email) {
+        const emailIsValid = validateEmail();
         if (!emailIsValid) {
-          return badRequest({
-            message: 'Invalid e-mail. Please provide a valid one.',
-          });
+          return invalidEmailResponse;
         }
       }
 
       const updateUserUseCase = new UpdateUserUseCase();
-      const updatedUser = await updateUserUseCase.execute(
-        userId,
-        updateUserParams
-      );
+      const updatedUser = await updateUserUseCase.execute(userId, params);
       return ok(updatedUser);
     } catch (err) {
       console.error(err);
