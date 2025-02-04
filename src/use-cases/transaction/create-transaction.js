@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { UserNotFoundError } from '../../errors/user';
+import { UserNotFoundError } from '../../errors/user.js';
 
 export class CreateTransactionUseCase {
   constructor(createTransactionRepository, getUserByIdRepository) {
@@ -8,7 +8,7 @@ export class CreateTransactionUseCase {
   }
 
   async execute(createTransactionParams) {
-    const userId = createTransactionParams.userId;
+    const userId = createTransactionParams.user_id;
     const user = await this.getUserByIdRepository.execute(userId);
     if (!user) {
       throw new UserNotFoundError(userId);
@@ -16,7 +16,7 @@ export class CreateTransactionUseCase {
 
     const transactionId = v4();
     const createdTransaction = await this.createTransactionRepository.execute({
-      createTransactionParams,
+      ...createTransactionParams,
       id: transactionId,
     });
 
