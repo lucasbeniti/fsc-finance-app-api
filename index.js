@@ -12,6 +12,7 @@ const app = express();
 
 app.use(express.json());
 
+// Rotas para usuário
 app.post('/api/users', async (req, res) => {
   const createUserController = makeCreateUserController();
   const { statusCode, body } = await createUserController.execute(req);
@@ -36,6 +37,8 @@ app.delete('/api/users/:userId', async (req, res) => {
   const { statusCode, body } = await deleteUserController.execute(req);
   res.status(statusCode).send(body);
 });
+
+// Rotas para transações
 
 app.listen(process.env.PORT, () =>
   console.log(`Listening on port ${process.env.PORT}`)
