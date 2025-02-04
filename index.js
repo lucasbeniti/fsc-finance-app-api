@@ -7,7 +7,13 @@ import {
   makeGetUserByIdController,
   makeUpdateUserController,
 } from './src/factories/controllers/user.js';
-import { makeCreateTransactionController } from './src/factories/controllers/transaction.js';
+import {
+  makeCreateTransactionController,
+  makeGetTransactionsByUserIdController,
+} from './src/factories/controllers/transaction.js';
+// import swaggerUi from 'swagger-ui-express';
+// import fs from 'fs';
+// import path from 'path';
 
 const app = express();
 
@@ -46,6 +52,27 @@ app.post('/api/transactions', async (req, res) => {
   res.status(statusCode).send(body);
 });
 
+app.get('/api/transactions', async (req, res) => {
+  const getTransactionsByUserIdController =
+    makeGetTransactionsByUserIdController();
+  const { statusCode, body } = await getTransactionsByUserIdController.execute(
+    req
+  );
+  res.status(statusCode).send(body);
+});
+
 app.listen(process.env.PORT, () =>
   console.log(`Listening on port ${process.env.PORT}`)
 );
+
+// const swaggerDocument = JSON.parse(
+//   fs.readFileSync(
+//     path.join(import.meta.dirname, '../docs/swagger.json'),
+//     'utf8'
+//   )
+// );
+// app.use(
+//   '/docs',
+//   swaggerUi.serve,
+//   swaggerUi.setup(swaggerDocument)
+// );

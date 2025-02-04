@@ -5,7 +5,7 @@ import {
   serverError,
   validateId,
   validateRequiredFields,
-  checkIfAmountIsCurrency,
+  checkIfAmountIsValid,
   checkIfTypeIsValid,
   invalidAmountResponse,
   invalidTypeResponse,
@@ -35,7 +35,7 @@ export class CreateTransactionController {
         return invalidIdResponse();
       }
 
-      const amountIsValid = checkIfAmountIsCurrency(params.amount);
+      const amountIsValid = checkIfAmountIsValid(params.amount);
       if (!amountIsValid) {
         return invalidAmountResponse();
       }
