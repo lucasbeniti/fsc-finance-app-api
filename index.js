@@ -10,6 +10,7 @@ import {
 import {
   makeCreateTransactionController,
   makeGetTransactionsByUserIdController,
+  makeUpdateTransactionController,
 } from './src/factories/controllers/transaction.js';
 // import swaggerUi from 'swagger-ui-express';
 // import fs from 'fs';
@@ -58,6 +59,12 @@ app.get('/api/transactions', async (req, res) => {
   const { statusCode, body } = await getTransactionsByUserIdController.execute(
     req
   );
+  res.status(statusCode).send(body);
+});
+
+app.patch('/api/transactions/:transactionId', async (req, res) => {
+  const updateTransactionController = makeUpdateTransactionController();
+  const { statusCode, body } = await updateTransactionController.execute(req);
   res.status(statusCode).send(body);
 });
 
