@@ -5,7 +5,7 @@ services:
     image: postgres
     container_name: finance-app-postgres
     environment:
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: 123
       POSTGRES_USER: postgres
       POSTGRES_DB: fsc-finance-app
     ports:
